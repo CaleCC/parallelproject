@@ -1,0 +1,33 @@
+/home/caleb/Documents/parallel/gaussian.c: In function ‘main’:
+/home/caleb/Documents/parallel/gaussian.c:33:3: error: ‘for’ loop initial declarations are only allowed in C99 mode
+   for (int q = 0; q < N; q++){
+   ^
+/home/caleb/Documents/parallel/gaussian.c:33:3: note: use option -std=c99 or -std=gnu99 to compile your code
+/home/caleb/Documents/parallel/gaussian.c:50:3: error: ‘for’ loop initial declarations are only allowed in C99 mode
+   for(int i = 0; i < numThreads; i++){
+   ^
+/home/caleb/Documents/parallel/gaussian.c:55:3: error: ‘for’ loop initial declarations are only allowed in C99 mode
+   for (int k=0; k < N-1; k++){
+   ^
+/home/caleb/Documents/parallel/gaussian.c:56:5: error: ‘for’ loop initial declarations are only allowed in C99 mode
+     for (int j = k+1; j < N; j++){
+     ^
+/home/caleb/Documents/parallel/gaussian.c:61:5: error: ‘for’ loop initial declarations are only allowed in C99 mode
+     for (int thread_index = 0; thread_index < numThreads; thread_index++){
+     ^
+/home/caleb/Documents/parallel/gaussian.c:65:14: error: redefinition of ‘thread_index’
+     for (int thread_index = 0; thread_index < numThreads; thread_index++){
+              ^
+/home/caleb/Documents/parallel/gaussian.c:61:14: note: previous definition of ‘thread_index’ was here
+     for (int thread_index = 0; thread_index < numThreads; thread_index++){
+              ^
+/home/caleb/Documents/parallel/gaussian.c:65:5: error: ‘for’ loop initial declarations are only allowed in C99 mode
+     for (int thread_index = 0; thread_index < numThreads; thread_index++){
+     ^
+/home/caleb/Documents/parallel/gaussian.c: In function ‘printMatrix’:
+/home/caleb/Documents/parallel/gaussian.c:96:3: error: ‘for’ loop initial declarations are only allowed in C99 mode
+   for (int x=0; x<N; x++){
+   ^
+/home/caleb/Documents/parallel/gaussian.c:98:4: error: ‘for’ loop initial declarations are only allowed in C99 mode
+    for(int y=0; y<N; y++)
+    ^
