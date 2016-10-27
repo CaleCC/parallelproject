@@ -35,48 +35,70 @@ int main(int argc, char const *argv[]) {
 
   double* b = (double*) malloc(sizeof(double)*N);
   ///double* x = (double*) malloc(sizeof(double)*N);
-  fillMatrix(N,A,b);
+  double record[5];
+  for (int test = 0;test < 5; test++){/* code */
+    fillMatrix(N,A,b);
 
-  //double A[3][3] = {2.0,1.0,1.0,6.0,2.0,1.0,-2.0,2.0,1.0};
+    //double A[3][3] = {2.0,1.0,1.0,6.0,2.0,1.0,-2.0,2.0,1.0};
 
-  //double b[3]={0,-1.0,7.0};
-  if (N <= 8)
-  printMatrix(N, A, b);
-  //all threads share
-  thread_data.A = A;
-  thread_data.b = b;
-  thread_data.N = N;
-  thread_data.numThreads = numThreads;
-
-  int *index = (int*)calloc(numThreads, sizeof(int*));
-
-  for(int i = 0; i < numThreads; i++){
-    index[i] = i;
-  }
-  gettimeofday(&startTime, NULL);
-
-  for (int k=0; k < N; k++){
-    for (int j = k+1; j < N; j++){
-      A[k][j] = A[k][j] / A[k][k];
-    }
-    b[k] = b[k] / A[k][k];
-    A[k][k] = 1;
-    thread_data.j = k;
-    for (int thread_index = 0; thread_index < numThreads; thread_index++){
-      pthread_create(&elimination_threads[thread_index], NULL, eliminate, (void*)&index[thread_index]);
-    }
-
-    for (int thread_index = 0; thread_index < numThreads; thread_index++){
-      pthread_join(elimination_threads[thread_index], NULL);
-    }
-    //printMatrix(N, A, b);
-
-  }
-
-    gettimeofday(&endElimination, NULL);
-    double eliminationTime = ((endElimination.tv_sec - startTime.tv_sec) * 1000000u + endElimination.tv_usec - startTime.tv_usec) / 1.e6;
-    printf("eliminationtime %f seconds\n",eliminationTime);
+    //double b[3]={0,-1.0,7.0};
+    if (N <= 8)
     printMatrix(N, A, b);
+    //all threads share
+    thread_data.A = A;
+    thread_data.b = b;
+    thread_data.N = N;
+    thread_data.numThreads = numThreads;
+
+    int *index = (int*)calloc(numThreads, sizeof(int*));
+
+    for(int i = 0; i < numThreads; i++){
+      index[i] = i;
+    }
+    gettimeofday(&startTime, NULL);
+
+    for (int k=0; k < N; k++){
+      for (int j = k+1; j < N; j++){
+        A[k][j] = A[k][j] / A[k][k];
+      }
+      b[k] = b[k] / A[k][k];
+      A[k][k] = 1;
+      thread_data.j = k;
+      for (int thread_index = 0; thread_index < numThreads; thread_index++){
+        pthread_create(&elimination_threads[thread_index], NULL, eliminate, (void*)&index[thread_index]);
+      }
+
+      for (int thread_index = 0; thread_index < numThreads; thread_index++){
+        pthread_join(elimination_threads[thread_index], NULL);
+      }
+    }
+      //printMatrix(N, A, b);
+
+
+
+      gettimeofday(&endElimination, NULL);
+      double eliminationTime = ((endElimination.tv_sec - startTime.tv_sec) * 1000000u + endElimination.tv_usec - startTime.tv_usec) / 1.e6;
+      record[test] = eliminationTime;
+    }
+    double sum = 0, mean, standDe = 0;
+    for(int i =0; i < 5; i ++){
+      sum += record[i];
+      printf("eliminationtime %f seconds\n",record[i]);
+    }
+    mean = sum / 5;
+
+    for (size_t i = 0; i < 5; i++) {
+      standDe += pow(record[i] - mean, 2);
+
+    }
+
+    standDe = sqrt(standDe/5);
+
+    printf("average eliminationtime %f seconds\n",mean);
+    printf("stand deviation %f\n", standDe);
+    if(N < 8){
+    printMatrix(N, A, b);
+    }
 
     return 0;
 
