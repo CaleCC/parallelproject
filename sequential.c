@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
   //allocate Matrix A
   double** A = (double **)calloc(N,sizeof(double*));
   for (int q = 0; q < N; q++){
-    A[q] = (double*) malloc(sizeof(double*));
+    A[q] = (double*) malloc(sizeof(double)*N);
   }
 
   double* b = (double*) malloc(sizeof(double)*N);
@@ -62,6 +62,7 @@ int main(int argc, char const *argv[]) {
       for (int j = k+1; j < N; j++){
         A[k][j] = A[k][j] / A[k][k];
       }
+
       b[k] = b[k] / A[k][k];
       A[k][k] = 1;
       thread_data.j = k;
@@ -90,12 +91,12 @@ int main(int argc, char const *argv[]) {
     }
     mean = sum / num_round;
 
-    for (size_t i = 0; i < 5; i++) {
+    for (size_t i = 0; i < num_round; i++) {
       standDe += pow(record[i] - mean, 2);
 
     }
 
-    standDe = sqrt(standDe/5);
+    standDe = sqrt(standDe/num_round);
 
     printf("average eliminationtime %f seconds\n",mean);
     printf("stand deviation %f\n", standDe);
@@ -117,13 +118,16 @@ void eliminate(){
   int i,q;
 
   for (i = j+1; i < N; i += 1){
+    double m = A[i][j];
     for(q = j+1; q < N; q ++){
-      A[i][q] = A[i][q] - A[i][j]*A[j][q];
+      A[i][q] = A[i][q] - m*A[j][q];
     }
-    b[i] = b[i]-A[i][j]*b[j];
+    b[i] = b[i]-m*b[j];
     A[i][j] = 0;
+    //printMatrix(N, A, b);
     //printf("print A, thread%d row=%d  col=%d\n",*thread_index,i,j);
   }
+  //printMatrix(N, A, b);
   return;
 }
 
